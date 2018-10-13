@@ -1,11 +1,22 @@
+import os
+import random
 from time import sleep
 
 import paho.mqtt.publish as publish
 
-HOST = 'mqtt'
-PORT = 1883
-TOPIC = 'cosn'
+messages = [
+    'Hey Ho!',
+    'Hi there',
+    'Wuzup?',
+    'Hello',
+    'Nice to meet you'
+]
 
 while True:
-    publish.single(topic=TOPIC, payload="Hey ho!", hostname=HOST, port=PORT)
+    publish.single(
+        topic=os.environ['MOSQUITTO_TOPIC'],
+        payload=random.choice(messages),
+        hostname=os.environ['MOSQUITTO_HOST'],
+        port=int(os.environ['MOSQUITTO_PORT'])
+    )
     sleep(1)

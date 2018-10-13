@@ -6,10 +6,8 @@ services:
     restart: always
     ports:
       - "5432:5432"
-    environment:
-      POSTGRES_DB: "mosquitto_logs"
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "postgres"
+    env_file:
+      - db.env
     volumes:
       - ./postgresql:/postgresql
 
@@ -22,9 +20,14 @@ services:
     build: publisher/.
     depends_on:
       - mqtt
+    env_file:
+      - common.env
 
   subscriber:
     build: subscriber/.
+    env_file:
+      - db.env
+      - common.env
     depends_on:
       - db
       - mqtt
