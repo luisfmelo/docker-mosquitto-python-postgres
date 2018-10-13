@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: "mosquitto_logs"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    volumes:
+      - ./postgresql:/postgresql
+
+  mqtt:
+    image: toke/mosquitto
+    ports:
+      - "1884:1883"
+
+  publisher:
+    build: publisher/.
+    depends_on:
+      - mqtt
+
+  subscriber:
+    build: subscriber/.
+    depends_on:
+      - db
+      - mqtt
